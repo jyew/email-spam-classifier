@@ -4,20 +4,26 @@ ENV PYTHONUNBUFFERED=1
 
 COPY * /opt/microservices/
 COPY requirements.txt /opt/microservices/
+
+WORKDIR /opt/microservices/
+
 RUN pip install --upgrade pip \
   && pip install --upgrade pipenv\
   && apt-get clean \
   && apt-get update \
+  && apt-get -y install wget unzip && rm -rf /var/cache/apk/* \
+  && wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1i2I7ulyoa9bJRFGOFhglR7c2E27peFz2' -O models.zip \
+  && unzip models.zip -d models \
+  && rm models.zip \
   && apt install -y build-essential \
   && apt install -y libmariadb3 libmariadb-dev \
-  && apt-get -y install wget unzip && rm -rf /var/cache/apk/* \
-  && wget https://rainbowtechcomhk-my.sharepoint.com/:u:/g/personal/jordan_yew_rainbowtech_com_hk/EdJU_x2NtatKs5mue3qHOIcBE4vmuDEj1UDCeVZCMVUSDA?e=oVgG1H -P models/ \
-  && wget https://rainbowtechcomhk-my.sharepoint.com/:u:/g/personal/jordan_yew_rainbowtech_com_hk/EZKQLmuMMbNJiEYamMcSRoIBvS-IfXfs0lSviyap11V_5Q?e=V6rgb6 -P models/ \
-  && pip install --upgrade -r /opt/microservices/requirements.txt
+  && pip install --upgrade -r /opt/microservices/requirements.txt \
+  && mkdir -p /nltk_data \
+  && chown 1001:1001 -R /nltk_data \ 
+  && chmod -R 777 /nltk_data
 
 USER 1001
 
 EXPOSE 8080
-WORKDIR /opt/microservices/
 
 CMD ["python", "app.py", "8080"]

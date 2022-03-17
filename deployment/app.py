@@ -27,8 +27,8 @@ CORS(app)
 api = Api(app)
 
 parser = reqparse.RequestParser()
-tfidfPath = './models/tfid_convertor.sav'
-modelPath = './models/finalized_model.sav'
+tfidfPath = 'models/tfid_convertor.sav'
+modelPath = 'models/finalized_model.sav'
 
 tfid = joblib.load(tfidfPath)
 eclf1 = joblib.load(modelPath)
